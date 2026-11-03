@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>复旦登录监测设置</title>
+  <style>
+    body { font: 14px sans-serif; max-width: 520px; margin: 32px auto; }
+    label { display: block; margin: 16px 0 6px; }
+    input { box-sizing: border-box; padding: 8px; width: 100%; }
+    button { margin-top: 20px; padding: 8px 16px; }
+    .hint { color: #666; line-height: 1.6; }
+    #status { margin-left: 12px; }
+  </style>
+</head>
+<body>
+  <h1>复旦登录监测</h1>
+  <p class="hint">
+    当前版本只监测登录状态并在后台静默续期，不会自动填写或提交登录表单。
+    插件不保存任何账号密码。
+  </p>
+  <label for="username">账号（可选，仅本地备注，不会被使用）</label>
+  <input id="username" autocomplete="username">
+  <button id="save">保存</button><span id="status"></span>
+  <script src="options.js"></script>
+</body>
+</html>
