@@ -1,16 +1,21 @@
 {
   "manifest_version": 3,
   "name": "Fudan Login Monitor",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "后台监测复旦课程平台登录状态，失效时通知。",
   "permissions": [
     "alarms",
     "notifications",
-    "storage"
+    "storage",
+    "tabs"
   ],
   "host_permissions": [
     "https://icourse.fudan.edu.cn/*",
-    "https://id.fudan.edu.cn/*"
+    "https://id.fudan.edu.cn/*",
+    "https://ehall.fudan.edu.cn/*",
+    "https://elearning.fudan.edu.cn/*",
+    "https://jwfw.fudan.edu.cn/*",
+    "https://my.fudan.edu.cn/*"
   ],
   "background": {
     "service_worker": "background.js"
