@@ -1,19 +1,25 @@
 # Fudan Login Monitor
 
-这是一个 Edge Manifest V3 插件，用于后台检查 `icourse.fudan.edu.cn` 的登录状态。
+这是一个 Edge Manifest V3 插件，后台检查多个复旦站点的登录状态，并在失效时自动补齐登录标签页。
 
 ## 当前行为
 
 - 每 20 分钟探活一次（安装、浏览器启动、点击工具栏图标时也会立即探测一次）；
-- 探活请求 `id.fudan.edu.cn/authserver/login?service=https://icourse.fudan.edu.cn/`：
+- 覆盖站点：`icourse`、`ehall`、`elearning`、`jwfw`、`my`；
+- 探活请求 `id.fudan.edu.cn/authserver/login?service=<站点>`：
   已登录会跳到 `/idp/authCenter/authenticate`；未登录停在 `/ac/#/index?...lck=`；
 - **UIS 会话仍在时后台静默续期**：同一请求会直接签发新的 `ST` ticket，
   插件据此判定会话有效并被动延长 SSO 有效期，不需要密码；
-- 只有连 UIS 会话都过期（拿不到 ticket）时才通知一次，点击通知打开认证页面；
-- 仅续期 `id.fudan.edu.cn` 的 SSO 会话；`icourse` 自身的登录令牌仍由 yjlogin 前端 JS 交换，
-  插件不会代为完成，因此网页端仍可能单独掉线；
+- **失效时自动打开认证页标签**：仅在该站点“上次有效、本次失效”时补登录，
+  标签在后台打开且不抢焦点；已存在同 URL 标签则直接复用；
 - 不自动填写账号密码，不自动提交表单；
 - 插件不保存账号密码；设置页的账号仅作本地备注，不被读取。
+
+## 已知限制
+
+- 插件后台请求**无法携带 UIS 会话 Cookie**（`PHPSESSID`/`usk` 为 HttpOnly，且跨站策略限制）。
+  因此插件只能判定状态，无法代替浏览器完成票据交换，必须由真实标签页完成登录跳转。
+- `icourse` 自身令牌由站点前端 JS 交换，插件不代为完成。
 
 ## 安装
 
