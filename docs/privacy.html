@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>复旦登录监测 · 隐私政策 / Privacy Policy</title>
+  <style>
+    body {
+      font: 15px/1.75 -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+      max-width: 720px;
+      margin: 40px auto;
+      padding: 0 20px;
+      color: #1f2328;
+    }
+    h1 { font-size: 24px; margin-bottom: 4px; }
+    h2 { font-size: 18px; margin-top: 32px; }
+    h3 { font-size: 15px; margin-top: 24px; }
+    .meta { color: #6b7280; font-size: 13px; }
+    hr { border: none; border-top: 1px solid #e5e7eb; margin: 36px 0; }
+    code { background: #f2f3f5; padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+    table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 14px; }
+    th, td { border: 1px solid #e5e7eb; padding: 6px 10px; text-align: left; vertical-align: top; }
+    th { background: #f7f8fa; }
+    a { color: #0969da; }
+  </style>
+</head>
+<body>
+  <h1>“复旦登录监测”隐私政策</h1>
+  <p class="meta">适用扩展：Fudan Login Monitor（复旦登录监测）· 生效日期：2026-11-06</p>
+
+  <h2>一句话概括</h2>
+  <p>
+    本扩展不收集、不上传、不出售任何用户数据。它只在你本机的浏览器里保存少量运行状态，
+    网络请求仅发往复旦大学的域名，用于判断登录态是否有效。
+  </p>
+
+  <h2>1. 处理的数据</h2>
+  <table>
+    <tr><th>数据</th><th>用途</th><th>存放位置</th><th>是否外传</th></tr>
+    <tr>
+      <td>各站点的探测结果（已登录 / 会话可续期 / 需重新登录 / 网络异常、检查时间）</td>
+      <td>在弹窗和角标显示状态；判断何时提醒</td>
+      <td>浏览器本地存储 <code>chrome.storage.local</code></td>
+      <td>否</td>
+    </tr>
+    <tr>
+      <td>扩展自己打开过的认证页标签页 ID、提醒去重标记、探测间隔设置</td>
+      <td>复用已打开的标签页、避免重复弹通知、按你的设置定时检查</td>
+      <td>浏览器本地存储</td>
+      <td>否</td>
+    </tr>
+  </table>
+  <p>
+    扩展<strong>不</strong>访问、读取、导出或上传浏览器的 Cookie；登录会话始终由 Edge 自己管理。
+    扩展<strong>不</strong>保存账号、密码或二次验证密钥，<strong>不</strong>自动填写或提交登录表单。
+  </p>
+
+  <h2>2. 网络请求</h2>
+  <p>扩展只会向下列域名发起请求，请求内容为一次标准的统一认证登录探测：</p>
+  <ul>
+    <li><code>id.fudan.edu.cn</code>（统一身份认证）</li>
+    <li><code>icourse.fudan.edu.cn</code></li>
+    <li><code>ehall.fudan.edu.cn</code></li>
+    <li><code>elearning.fudan.edu.cn</code></li>
+    <li><code>jwfw.fudan.edu.cn</code></li>
+    <li><code>my.fudan.edu.cn</code></li>
+  </ul>
+  <p>除此之外没有任何第三方服务器、统计服务、广告或远程代码加载。</p>
+
+  <h2>3. 数据共享与保留</h2>
+  <p>
+    由于不存在上传，扩展开发者无法接触上述数据，也不存在共享、出售或跨境传输。
+    本地数据会在你卸载扩展或清除扩展数据时一并删除。
+  </p>
+
+  <h2>4. 权限与对应目的</h2>
+  <ul>
+    <li><code>alarms</code>：按设定间隔定时检查登录态；</li>
+    <li><code>notifications</code>：登录态失效时提醒一次；</li>
+    <li><code>storage</code>：保存上述本地状态与设置；</li>
+    <li>站点访问权限：仅用于向上述复旦域名发起探测请求。</li>
+  </ul>
+
+  <h2>5. 儿童与敏感信息</h2>
+  <p>本扩展不面向儿童，也不处理任何敏感个人信息（不含密码、证件号、位置、通讯录等）。</p>
+
+  <h2>6. 联系与变更</h2>
+  <p>
+    问题或建议请通过
+    <a href="https://github.com/javaochen/fudan-auto-login/issues">GitHub Issues</a>
+    反馈。若本政策发生实质变更，会更新本页顶部日期并在扩展版本说明中注明。
+  </p>
+
+  <hr>
+
+  <h1>Privacy Policy (English)</h1>
+  <p class="meta">Applies to the Fudan Login Monitor browser extension. Effective: 2026-11-06.</p>
+
+  <h2>Summary</h2>
+  <p>
+    This extension collects no personal data and transmits nothing to the developer or any third party.
+    It stores a small amount of state locally in your browser and sends requests only to Fudan University
+    domains to check whether your single sign-on session is still valid.
+  </p>
+
+  <h2>Data handled</h2>
+  <ul>
+    <li><strong>Stored locally</strong> (<code>chrome.storage.local</code>): per-site login status and check timestamps,
+      IDs of login tabs the extension opened, a notification de-duplication key, and your check interval.</li>
+    <li><strong>Not accessed</strong>: browser cookies are never read, exported, or uploaded. No passwords,
+      usernames, or one-time codes are stored.</li>
+    <li><strong>Not collected</strong>: no analytics, telemetry, advertising, or remotely hosted code.</li>
+  </ul>
+
+  <h2>Network endpoints</h2>
+  <p>
+    Requests go only to <code>id.fudan.edu.cn</code>, <code>icourse.fudan.edu.cn</code>,
+    <code>ehall.fudan.edu.cn</code>, <code>elearning.fudan.edu.cn</code>,
+    <code>jwfw.fudan.edu.cn</code>, and <code>my.fudan.edu.cn</code>.
+    Each request is a standard SSO login probe; no page content is sent anywhere.
+  </p>
+
+  <h2>Sharing, retention, and permissions</h2>
+  <p>
+    Because no data leaves your device, there is nothing to share, sell, or transfer.
+    Local data is removed when you uninstall the extension or clear its data.
+    Permissions used: <code>alarms</code> (scheduled checks), <code>notifications</code> (one alert when a session expires),
+    <code>storage</code> (local state), and host access limited to the Fudan domains listed above.
+  </p>
+
+  <h2>Contact</h2>
+  <p>
+    Please use
+    <a href="https://github.com/javaochen/fudan-auto-login/issues">GitHub Issues</a>
+    for questions. Material changes will be reflected by updating the effective date above.
+  </p>
+</body>
+</html>
