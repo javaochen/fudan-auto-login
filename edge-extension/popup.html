@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>复旦登录状态</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #1f2328;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --ok: #1a7f37;
+      --ok-bg: #e8f5ec;
+      --warn: #9a6700;
+      --warn-bg: #fff8e1;
+      --err: #b42318;
+      --err-bg: #fdecea;
+      --gray: #57606a;
+      --gray-bg: #f2f3f5;
+    }
+    * { box-sizing: border-box; }
+    body {
+      width: 320px;
+      margin: 0;
+      font: 13px/1.5 -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+      color: var(--fg);
+      background: var(--bg);
+    }
+    header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 12px 14px 8px;
+    }
+    h1 { margin: 0; font-size: 14px; font-weight: 600; }
+    .checked { color: var(--muted); font-size: 12px; }
+    ul { list-style: none; margin: 0; padding: 0 8px; }
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 7px 6px;
+      border-top: 1px solid var(--line);
+    }
+    .name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .pill {
+      padding: 1px 7px;
+      border-radius: 999px;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+    .ok { color: var(--ok); background: var(--ok-bg); }
+    .renewable { color: var(--warn); background: var(--warn-bg); }
+    .expired { color: var(--err); background: var(--err-bg); }
+    .error { color: var(--gray); background: var(--gray-bg); }
+    .unknown { color: var(--gray); background: var(--gray-bg); }
+    button {
+      font: inherit;
+      font-size: 12px;
+      padding: 2px 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fafafa;
+      color: #24292f;
+      cursor: pointer;
+    }
+    button:hover { background: #f0f1f3; }
+    button:disabled { opacity: .55; cursor: default; }
+    footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 10px 14px 12px;
+      border-top: 1px solid var(--line);
+      margin-top: 6px;
+    }
+    a { color: #0969da; text-decoration: none; font-size: 12px; }
+    a:hover { text-decoration: underline; }
+    .hint {
+      padding: 0 14px 10px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+    #probe { min-width: 76px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>复旦登录状态</h1>
+    <span class="checked" id="checked">尚未检查</span>
+  </header>
+  <ul id="sites"></ul>
+  <p class="hint" id="hint" hidden>
+    检测到登录态失效时，插件会在后台打开对应站点的认证页；登录仍需你本人完成。
+  </p>
+  <footer>
+    <button id="probe">立即检查</button>
+    <a href="#" id="options">设置</a>
+  </footer>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,13 +1,14 @@
 {
   "manifest_version": 3,
-  "name": "Fudan Login Monitor",
-  "version": "0.2.0",
-  "description": "后台监测复旦课程平台登录状态，失效时通知。",
+  "name": "复旦登录监测",
+  "short_name": "复旦登录",
+  "version": "0.3.0",
+  "description": "定时检查复旦常用站点的统一认证登录态，失效时提醒并在后台补开认证页；不保存账号密码。",
+  "homepage_url": "https://github.com/javaochen/fudan-auto-login",
   "permissions": [
     "alarms",
     "notifications",
-    "storage",
-    "tabs"
+    "storage"
   ],
   "host_permissions": [
     "https://icourse.fudan.edu.cn/*",
@@ -20,18 +21,22 @@
   "background": {
     "service_worker": "background.js"
   },
-  "options_page": "options.html",
+  "action": {
+    "default_title": "复旦登录状态",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "32": "icon32.png"
+    }
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
   "icons": {
     "16": "icon16.png",
     "32": "icon32.png",
     "48": "icon48.png",
     "128": "icon128.png"
-  },
-  "action": {
-    "default_title": "复旦登录状态",
-    "default_icon": {
-      "16": "icon16.png",
-      "32": "icon32.png"
-    }
   }
 }
