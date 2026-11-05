@@ -7,7 +7,7 @@
 - 默认每 20 分钟探活一次，间隔可在设置页调整（5–60 分钟）；安装、浏览器启动时也会立即探测一次；
 - 点击工具栏图标打开状态弹窗：逐站点显示登录态，可“立即检查”或直接去登录；
 - 工具栏角标显示当前需要重新登录的站点数量，全部正常时不显示；
-- 覆盖站点：`icourse`、`ehall`、`elearning`、`jwfw`、`my`；
+- 覆盖站点：`icourse`、`ehall`、`elearning`、`my`（`jwfw` 已并入 eHall 的 `/jxmh/`，不再单独监测）；
 - 探活请求 `id.fudan.edu.cn/authserver/login?service=<站点>`：
   已登录会跳到 `/idp/authCenter/authenticate`；未登录停在 `/ac/#/index?...lck=`；
 - **UIS 会话仍在时后台静默续期**：同一请求会直接签发新的 `ST` ticket，

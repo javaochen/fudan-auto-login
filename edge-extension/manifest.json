@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "复旦登录监测",
   "short_name": "复旦登录",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "定时检查复旦常用站点的统一认证登录态，失效时提醒并在后台补开认证页；不保存账号密码。",
   "homepage_url": "https://github.com/javaochen/fudan-auto-login",
   "permissions": [
@@ -15,7 +15,6 @@
     "https://id.fudan.edu.cn/*",
     "https://ehall.fudan.edu.cn/*",
     "https://elearning.fudan.edu.cn/*",
-    "https://jwfw.fudan.edu.cn/*",
     "https://my.fudan.edu.cn/*"
   ],
   "background": {

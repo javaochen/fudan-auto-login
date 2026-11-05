@@ -28,12 +28,6 @@ const SITES = [
     loginUrl: 'https://elearning.fudan.edu.cn/',
   },
   {
-    id: 'jwfw',
-    name: '教务服务',
-    service: 'https://jwfw.fudan.edu.cn/',
-    loginUrl: 'https://jwfw.fudan.edu.cn/',
-  },
-  {
     id: 'my',
     name: '个人门户',
     service: 'https://my.fudan.edu.cn/',

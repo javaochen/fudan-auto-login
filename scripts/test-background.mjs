@@ -136,25 +136,25 @@ const callMessage = (message) =>
   });
 
 console.log('1) 首次安装：全部失效');
-setProbe({ icourse: EXPIRED, ehall: EXPIRED, elearning: EXPIRED, jwfw: EXPIRED, my: EXPIRED });
+setProbe({ icourse: EXPIRED, ehall: EXPIRED, elearning: EXPIRED, my: EXPIRED });
 await Promise.all(listeners.installed.map((fn) => fn({ reason: 'install' })));
-check('生成 5 条站点状态', Object.keys(store.sites || {}).length === 5);
+check('生成 4 条站点状态', Object.keys(store.sites || {}).length === 4);
 check('全部标记为 expired', Object.values(store.sites).every((item) => item.status === 'expired'));
-check('角标显示异常数 5', badge.text === '5', badge.text);
+check('角标显示异常数 4', badge.text === '4', badge.text);
 check('首次不补开标签页（没有“上次有效”基线）', tabs.length === 0, `${tabs.length}`);
 check('只弹 1 条通知', notifications.length === 1, `${notifications.length}`);
 check('旧 username 字段被清理', !('username' in store));
 check('创建了定时器', alarms.length === 1 && alarms[0].periodInMinutes === 20, JSON.stringify(alarms));
 
 console.log('2) 全部恢复登录');
-setProbe({ icourse: AUTH, ehall: AUTH, elearning: AUTH, jwfw: AUTH, my: AUTH });
+setProbe({ icourse: AUTH, ehall: AUTH, elearning: AUTH, my: AUTH });
 const okRun = await callMessage({ type: 'probe' });
-check('消息接口返回 5 条结果', okRun?.ok === true && okRun.results.length === 5);
+check('消息接口返回 4 条结果', okRun?.ok === true && okRun.results.length === 4);
 check('角标被清空', badge.text === '', JSON.stringify(badge.text));
 check('通知去重标记重置', store.notifiedKey === '');
 
 console.log('3) 再次失效：补开标签页 + 提醒');
-setProbe({ icourse: EXPIRED, ehall: AUTH, elearning: AUTH, jwfw: AUTH, my: AUTH });
+setProbe({ icourse: EXPIRED, ehall: AUTH, elearning: AUTH, my: AUTH });
 await callMessage({ type: 'probe' });
 check('为 icourse 打开 1 个后台标签页', tabs.length === 1 && tabs[0].active === false, JSON.stringify(tabs));
 check('通知数增至 2', notifications.length === 2, `${notifications.length}`);
@@ -166,14 +166,14 @@ check('通知没有增加', notifications.length === 2, `${notifications.length}
 check('标签页没有增加', tabs.length === 1, `${tabs.length}`);
 
 console.log('5) 会话可续期：不算异常');
-setProbe({ icourse: RENEWABLE, ehall: RENEWABLE, elearning: RENEWABLE, jwfw: RENEWABLE, my: RENEWABLE });
+setProbe({ icourse: RENEWABLE, ehall: RENEWABLE, elearning: RENEWABLE, my: RENEWABLE });
 await callMessage({ type: 'probe' });
 check('状态为 renewable', Object.values(store.sites).every((item) => item.status === 'renewable'));
 check('角标清空', badge.text === '');
 check('没有新增标签页', tabs.length === 1);
 
 console.log('6) 网络异常：归类为 error 且可点开登录页');
-setProbe({ icourse: TIMEOUT, ehall: AUTH, elearning: AUTH, jwfw: AUTH, my: AUTH });
+setProbe({ icourse: TIMEOUT, ehall: AUTH, elearning: AUTH, my: AUTH });
 await callMessage({ type: 'probe' });
 check('icourse 状态为 error', store.sites.icourse.status === 'error');
 check('角标显示 1', badge.text === '1', badge.text);

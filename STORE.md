@@ -21,7 +21,7 @@
 
 **详细描述（中文）**
 
-> 复旦登录监测会按你设定的间隔（默认 20 分钟）检查 icourse、eHall、eLearning、教务服务、个人门户这 5 个站点的统一认证登录态。
+> 复旦登录监测会按你设定的间隔（默认 20 分钟）检查 icourse、eHall、eLearning、个人门户这 4 个站点的统一认证登录态。
 >
 > · 会话仍然有效时，探测请求本身会完成一次被动续期，不需要你操作；
 > · 会话失效时，插件在后台补开对应站点的认证页，并弹出一次提醒；
@@ -33,7 +33,7 @@
 
 **Detailed description (English)**
 
-> Fudan Login Monitor checks the single sign-on (SSO) status of five Fudan University sites — icourse, eHall, eLearning, academic affairs, and the personal portal — at an interval you choose (20 minutes by default).
+> Fudan Login Monitor checks the single sign-on (SSO) status of four Fudan University sites — icourse, eHall, eLearning, and the personal portal — at an interval you choose (20 minutes by default).
 >
 > · While the session is valid, the probe itself passively renews it; no action needed.
 > · When the session expires, the extension reopens that site's sign-in page in a background tab and shows a single notification.
@@ -51,7 +51,7 @@
 | `notifications` | 登录态失效时提醒用户一次，否则用户无法得知会话已过期。 | Shows one notification when a session expires; otherwise the user cannot learn about it. |
 | `storage` | 在本机保存各站点探测结果、上次检查时间、提醒去重标记和检查间隔。 | Stores per-site status, last check time, a notification de-dup key, and the interval locally. |
 | `https://id.fudan.edu.cn/*` | 统一认证入口，用于判断会话是否有效。 | SSO entry point used to detect whether the session is valid. |
-| `https://icourse.fudan.edu.cn/*` 等 5 个站点 | 失效时打开对应站点的认证页，复用已打开的标签页。 | Opens/reuses the corresponding sign-in tab when a session expires. |
+| `https://icourse.fudan.edu.cn/*` 等 4 个站点 | 失效时打开对应站点的认证页，复用已打开的标签页。 | Opens/reuses the corresponding sign-in tab when a session expires. |
 
 不申请 `tabs`：读取标签页 URL 的能力对本扩展没有用处，改用本地记录的标签页 ID 复用标签页。
 
@@ -76,7 +76,7 @@
 
 建议截图 3 张（在 1280×800 窗口下截取，避免包含真实学号）：
 
-1. 弹窗正常态：5 个站点全部“已登录”；
+1. 弹窗正常态：4 个站点全部“已登录”；
 2. 弹窗异常态：1–2 个站点“需重新登录”，展示“去登录”按钮；
 3. 设置页：检查频率与隐私说明。
 

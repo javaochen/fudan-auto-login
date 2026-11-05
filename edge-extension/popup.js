@@ -2,7 +2,6 @@ const SITE_NAMES = {
   icourse: '智慧教学资源平台',
   ehall: 'eHall',
   elearning: 'eLearning',
-  jwfw: '教务服务',
   my: '个人门户',
 };
 

@@ -3,7 +3,7 @@
 """
 复旦统一身份认证（id.fudan.edu.cn，新版 ID 系统）自动登录 + 会话保活脚本
 
-适用：icourse / elearning / ehall / jwfw / my 等所有走复旦 CAS 单点登录的站点。
+适用：icourse / elearning / ehall / my 等所有走复旦 CAS 单点登录的站点。
 解决的问题：这类站点登录态约 1~2 小时失效，脚本会自动探测失效并静默重登。
 
 快速开始
@@ -67,7 +67,6 @@ SERVICES: Dict[str, str] = {
     "icourse": "https://icourse.fudan.edu.cn/",
     "elearning": "https://elearning.fudan.edu.cn/",
     "ehall": "https://ehall.fudan.edu.cn/",
-    "jwfw": "https://jwfw.fudan.edu.cn/",
     "my": "https://my.fudan.edu.cn/",
 }
 
@@ -467,7 +466,7 @@ def resolve_credentials(args: argparse.Namespace) -> tuple[str, str]:
 def main() -> int:
     parser = argparse.ArgumentParser(description="复旦统一身份认证自动登录 / 保活")
     parser.add_argument("--service", default="icourse",
-                        help="站点短名（icourse/elearning/ehall/jwfw/my）或完整 service URL")
+                        help="站点短名（icourse/elearning/ehall/my）或完整 service URL")
     parser.add_argument("--probe-url", default=None,
                         help="探活用的 URL，默认就是 service；可指定一个登录后才有内容的深层页面")
     parser.add_argument("--username", default=None)

@@ -37,7 +37,7 @@ python fudan_auto_login.py --service icourse --daemon --interval 1200
 python fudan_auto_login.py --service icourse --daemon --log-file fudan_daemon.log
 ```
 
-可用 `--service` 短名：`icourse` / `elearning` / `ehall` / `jwfw` / `my`，也可传完整 URL。
+可用 `--service` 短名：`icourse` / `elearning` / `ehall` / `my`，也可传完整 URL。
 
 ### 静默后台运行
 
