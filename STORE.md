@@ -63,8 +63,8 @@
 - 是否包含广告或跟踪：**否**
 - 隐私政策 URL：`https://javaochen.github.io/fudan-auto-login/privacy.html`
 
-> 该 URL 需要先在 GitHub 仓库 Settings → Pages 中选择 `main` 分支的 `/docs` 目录发布。
-> 发布后用无痕窗口打开确认可访问，否则审核会直接退回。
+> 该 URL 已通过 GitHub Pages（`main` 分支 `/docs`）发布，2026-11-06 实测可匿名访问、返回 `text/html`。
+> 若以后改了文件名或目录，记得同步修改这里和商店表单里的 URL。
 
 ## 4. 素材清单
 
