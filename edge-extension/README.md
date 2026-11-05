@@ -4,7 +4,9 @@
 
 ## 当前行为
 
-- 每 20 分钟探活一次（安装、浏览器启动、点击工具栏图标时也会立即探测一次）；
+- 默认每 20 分钟探活一次，间隔可在设置页调整（5–60 分钟）；安装、浏览器启动时也会立即探测一次；
+- 点击工具栏图标打开状态弹窗：逐站点显示登录态，可“立即检查”或直接去登录；
+- 工具栏角标显示当前需要重新登录的站点数量，全部正常时不显示；
 - 覆盖站点：`icourse`、`ehall`、`elearning`、`jwfw`、`my`；
 - 探活请求 `id.fudan.edu.cn/authserver/login?service=<站点>`：
   已登录会跳到 `/idp/authCenter/authenticate`；未登录停在 `/ac/#/index?...lck=`；
@@ -27,6 +29,22 @@
 2. 打开“开发人员模式”。
 3. 点击“加载解压缩的扩展”。
 4. 选择本目录 `edge-extension`。
-5. 点击插件详情中的“扩展选项”可填写账号备注（可选，插件不使用该值）。
+5. 点击工具栏图标可查看各站点状态；点击弹窗右下角“设置”可调整检查间隔。
+
+## 权限
+
+只申请 `alarms`（定时检查）、`notifications`（失效提醒）、`storage`（本地状态），
+外加 6 个 `*.fudan.edu.cn` 域名的访问权限。不申请 `tabs`：复用认证页标签靠本地记录的标签页 ID。
+
+## 隐私
+
+不收集、不上传任何数据：不保存账号密码，不读取或导出 Cookie，无统计与远程代码。
+完整说明见 [`../docs/privacy.html`](../docs/privacy.html)。
+
+## 发布
+
+商店文案、权限理由、审核备注见 [`../STORE.md`](../STORE.md)；
+打包用 `powershell -File scripts/pack-extension.ps1`，产物在 `dist/`；
+后台逻辑回归测试用 `node scripts/test-background.mjs`。
 
 浏览器的登录 Cookie 仍由 Edge 自己管理；插件不会读取或导出 Cookie。
