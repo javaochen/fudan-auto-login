@@ -14,14 +14,15 @@
 2) 配置账号（不要写进脚本里）：
    export FUDAN_USERNAME=你的学号
    export FUDAN_PASSWORD=你的密码
-   # 若账号开启了 TOTP 二次验证（推荐，唯一可脚本化的一档）：
+   # 若账号要求二级认证（Level 2），脚本只能自动通过动态口令(OTP)一档：
    export FUDAN_TOTP_SECRET=你的TOTP密钥   # 绑定时给的 otpauth:// 里的 secret
+   # 短信/邮箱验证码需要交互输入；微信扫码无法无人值守通过。
 
 3) 用法：
    python fudan_auto_login.py --service icourse              # 登录一次并把 cookie 存盘
    python fudan_auto_login.py --service icourse --check      # 只检查当前登录态是否有效
-   python fudan_auto_login.py --service icourse --daemon --interval 1200
-                                                             # 每 20 分钟探活，失效自动重登
+   python fudan_auto_login.py --service icourse --daemon --interval 3600
+                                                             # 每小时探活一次，仅在失效时自动登录
    python fudan_auto_login.py --service icourse --daemon --log-file fudan_daemon.log
                                                              # 后台/计划任务场景：日志写文件而非控制台
 
@@ -32,7 +33,7 @@
    wscript.exe "<本目录>\run_daemon.vbs"
 并在任务设置的“常规”里勾选“不管用户是否登录都要运行”（凭据请放在用户环境变量中）。
 
-合规提示：仅用于本人账号的正常使用，探测间隔建议 >= 20 分钟，不要高频轮询学校服务器。
+合规提示：仅用于本人账号的正常使用，探测间隔建议 >= 60 分钟，不要高频轮询学校服务器。
 """
 
 from __future__ import annotations
@@ -307,20 +308,33 @@ class FudanAuth:
         return self._step4b_second_factor(data, payload)
 
     def _step4b_second_factor(self, first_resp: Dict[str, Any], base_payload: Dict[str, Any]) -> str:
-        next_module = (
-            deep_get(first_resp, "authModuleCode")
-            or deep_get(first_resp, "nextAuthModule")
-            or deep_get(first_resp, "moduleCode")
-            or "totp"
-        )
+        """二级认证（pageLevelNo=2）。服务端返回可选模块，优先用 TOTP 自动通过。"""
+        options = deep_get(first_resp, "moduleCodes") or []
+        if isinstance(options, str):
+            options = [options]
         request_number = deep_get(first_resp, "requestNumber")
-        code = self._get_otp_code(next_module)
+        chain = deep_get(first_resp, "authChainCode") or base_payload.get("authChainCode")
 
-        payload = dict(base_payload)
-        payload["authModuleCode"] = next_module
+        module = self._pick_second_factor(options)
+        if not module:
+            raise AuthError(
+                "账号要求二级认证，但没有可脚本化的方式。"
+                f"可选模块：{options or '未知'}。"
+                "短信/邮箱需要人工收码，二维码需要手机扫码；"
+                "请到统一认证中心绑定动态口令(OTP)，并把密钥配到 FUDAN_TOTP_SECRET。"
+            )
+
+        code = self._get_otp_code(module)
+        payload = {
+            "authModuleCode": module,
+            "authChainCode": chain,
+            "entityId": base_payload.get("entityId"),
+            "requestType": "chain_type",
+            "lck": base_payload.get("lck"),
+            "authPara": {"loginName": self.username, "verifyCode": code},
+        }
         if request_number:
             payload["requestNumber"] = request_number
-        payload["authPara"] = {"loginName": self.username, "verifyCode": code}
 
         resp = self.session.post(f"{IDP}/idp/authn/authExecute", json=payload, timeout=self.timeout)
         self._dump("step4b", resp)
@@ -328,22 +342,35 @@ class FudanAuth:
         token = deep_get(data, "loginToken")
         if not token:
             raise AuthError(
-                "二次验证后仍未拿到 loginToken。"
+                f"二级认证未通过（模块 {module}）。"
                 f"响应：{json.dumps(data, ensure_ascii=False)[:400]}"
-                "若第二因素是微信扫码/短信/邮箱，脚本无法无人值守通过，请改用 TOTP。"
             )
         return token
 
-    def _get_otp_code(self, module: str) -> str:
-        """优先用 TOTP 密钥自动生成；否则退化成交互式手输。"""
+    # 二级认证模块与本地可自动化的程度：otp 可全自动，sms/mail 只能交互式输入
+    _SECOND_FACTOR_PRIORITY = ("userAndOtp", "userAndSms", "userAndMail")
+
+    def _pick_second_factor(self, options: Any) -> Optional[str]:
+        if not isinstance(options, list):
+            return None
         if self.otp_secret:
+            return "userAndOtp" if "userAndOtp" in options else None
+        for module in self._SECOND_FACTOR_PRIORITY:
+            if module in options:
+                return module
+        return None
+
+    def _get_otp_code(self, module: str) -> str:
+        """TOTP 直接生成；短信/邮箱退化为交互式输入。"""
+        if module == "userAndOtp" and self.otp_secret:
             try:
                 import pyotp
             except ImportError:
                 raise AuthError("配置了 TOTP 密钥但缺 pyotp：pip install pyotp")
             return pyotp.TOTP(self.otp_secret).now()
-        print(f"\n需要第二因素验证码（模块：{module}）")
-        return getpass.getpass("请输入验证码（微信/短信/邮箱/TOTP）：").strip()
+        label = {"userAndSms": "短信验证码", "userAndMail": "邮箱验证码"}.get(module, module)
+        print(f"\n需要二级认证：{label}")
+        return getpass.getpass(f"请输入{label}：").strip()
 
     def _step5_get_ticket(self, token: str) -> str:
         resp = self.session.post(
@@ -409,7 +436,8 @@ class FudanAuth:
         return self.login()
 
     def run_daemon(self, interval: int, max_retry: int = 3) -> None:
-        self._log(f"保活守护启动：每 {interval} 秒探活一次，Ctrl+C 退出")
+        """低频探活：常驻时只在检测到失效后才登录，平时不做任何写操作。"""
+        self._log(f"保活守护启动：每 {interval} 秒探活一次，仅在失效时自动登录")
         backoff = interval
         while True:
             success = False
@@ -420,6 +448,9 @@ class FudanAuth:
                         break
                 except AuthError as exc:
                     self._log(f"登录失败（第 {attempt}/{max_retry} 次）：{exc}")
+                    # 二级认证无法自动完成时重试无意义，直接等下一轮
+                    if "二级认证" in str(exc):
+                        break
                 except requests.RequestException as exc:
                     self._log(f"网络异常（第 {attempt}/{max_retry} 次）：{exc}")
                 if attempt < max_retry:
@@ -475,7 +506,7 @@ def main() -> int:
     parser.add_argument("--cookie-file", default=".fudan_cookies")
     parser.add_argument("--check", action="store_true", help="只检查登录态，不触发登录")
     parser.add_argument("--daemon", action="store_true", help="常驻保活模式")
-    parser.add_argument("--interval", type=int, default=1200, help="保活间隔秒数，默认 1200（20 分钟）")
+    parser.add_argument("--interval", type=int, default=3600, help="探活间隔秒数，默认 3600（60 分钟）；只在失效时才登录")
     parser.add_argument("--debug", action="store_true", help="打印每一步的响应摘要，排错用")
     parser.add_argument("--log-file", default=None, help="把日志追加写入文件（后台/计划任务场景必需）")
     args = parser.parse_args()
