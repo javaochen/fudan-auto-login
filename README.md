@@ -33,7 +33,7 @@ setx FUDAN_TOTP_SECRET "你的TOTP密钥"
 ```bash
 python fudan_auto_login.py --service icourse              # 登录一次并保存 cookie
 python fudan_auto_login.py --service icourse --check      # 只检查登录态
-python fudan_auto_login.py --service icourse --daemon --interval 1200
+python fudan_auto_login.py --service icourse --daemon --interval 3600
 python fudan_auto_login.py --service icourse --daemon --log-file fudan_daemon.log
 ```
 
@@ -43,10 +43,29 @@ python fudan_auto_login.py --service icourse --daemon --log-file fudan_daemon.lo
 
 双击 `run_daemon.vbs` 以无窗口方式启动守护进程，日志写入 `fudan_daemon.log`。
 
+默认 **每 60 分钟**探活一次，且**只在检测到失效时才会登录**，平时不会产生任何登录请求。
+
 开机自启：任务计划程序 → 新建任务 → 操作设为
 `wscript.exe "<目录>\run_daemon.vbs"`，并勾选“不管用户是否登录都要运行”。
 
 失败时采用指数退避（最长 1 小时），避免离线期间高频请求学校服务器。
+
+### 二级认证（Level 2）
+
+学校现已在密码校验后追加二级认证，接口返回 `pageLevelNo: 2`、`second: true`，
+可选模块为 `qr` / `userAndMail` / `userAndSms` / `userAndOtp`。
+
+脚本的处理优先级：
+
+| 模块 | 自动化程度 |
+|---|---|
+| `userAndOtp`（动态口令） | ✅ 配好 `FUDAN_TOTP_SECRET` 可全自动 |
+| `userAndSms` / `userAndMail` | ⚠️ 需交互式输入验证码 |
+| `qr`（微信扫码） | ❌ 无法无人值守，请改用 OTP |
+
+配置了 `FUDAN_TOTP_SECRET` 时脚本只走 OTP；未配置时会退化为提示输入短信/邮箱验证码。
+若二级认证无法自动完成，守护进程会跳过本次重试，等下一轮再试，避免反复触发风控。
+
 
 ### 登录态判定
 
@@ -73,7 +92,7 @@ python fudan_auto_login.py --service icourse --daemon --log-file fudan_daemon.lo
 
 ## 合规提示
 
-仅用于本人账号的正常使用。探测间隔建议 ≥ 20 分钟，不要高频轮询学校服务器。
+仅用于本人账号的正常使用。探测间隔建议 ≥ 60 分钟，不要高频轮询学校服务器。
 
 ## 许可
 
